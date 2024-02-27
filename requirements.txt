@@ -1,0 +1,12 @@
+pytest
+fastapi
+uvicorn
+google-auth-httplib2
+google-api-python-client
+google_auth_oauthlib
+tenacity
+docx2txt
+sqlalchemy
+google
+pandas
+psycopg2
