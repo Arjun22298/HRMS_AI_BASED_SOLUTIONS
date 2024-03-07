@@ -5,17 +5,20 @@ class Qualification:
         self.description = description
         self.isActive = isActive
 
+
 class City:
     def __init__(self, id, cityName, isActive):
         self.id = id
         self.cityName = cityName
         self.isActive = isActive
 
+
 class Skill:
     def __init__(self, id, skillName, isActive):
         self.id = id
         self.skillName = skillName
         self.isActive = isActive
+
 
 class StatusId:
     def __init__(self, id, statusName, statusType, isActive):
@@ -24,9 +27,12 @@ class StatusId:
         self.statusType = statusType
         self.isActive = isActive
 
+
 class CandidateDetails:
-    def __init__(self, fullName, email, contactNo, altContactNo, gender, birthDate, passingYear, whatsappNo, resumeUrl, linkedInUrl,
-                 experienceInYears, profileScannedOn, currentCompanyName, profileReferance, feedbackStatus, address, qualification_id, city_id,
+    def __init__(self, fullName, email, contactNo, altContactNo, gender, birthDate, passingYear, whatsappNo, resumeUrl,
+                 linkedInUrl,
+                 experienceInYears, profileScannedOn, currentCompanyName, profileReferance, feedbackStatus, address,
+                 qualification_id, city_id,
                  skills=None, statusId=None):
         self.fullName = fullName
         self.email = email
@@ -56,5 +62,3 @@ class CandidateDetails:
     def getSkills(self):
         print(f"Skills Name :: {self.skills}")
         return self.skills
-
-

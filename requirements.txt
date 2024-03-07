@@ -10,3 +10,4 @@ sqlalchemy
 google
 pandas
 psycopg2
+wrapt

@@ -3,64 +3,81 @@ import json
 import requests
 from com.rb.hrms.resume_parser.constants.HRMSApiConstants import *
 from com.rb.hrms.resume_parser.utils.ConvertNullToNone import ConvertNullToNone
+from com.rb.hrms.resume_parser.logging.Logging_file import custom_logger
+
+logger = custom_logger
 
 
 class HRMSApiService:
-    def __init__(self, base_url, username, password):
+    def __init__(self, base_url, username, password, jwt_token_id=None, X_TenantID=str('redberyltech')):
         self.base_url = base_url
         self.username = username
         self.password = password
-        self.jwt_token = None
+        self.jwt_token = jwt_token_id
+        self.X_TenantID = X_TenantID
         self.headers = None
 
+    @custom_logger.log_around
     def form_headers(self):
         self.headers = {
             'Content-Type': 'application/json',
             'Accept': "*/*",
-            'X-TenantID': "redberyltech"
+            'X-TenantID': self.X_TenantID
         }
         if self.jwt_token:
+            self.jwt_token = self.jwt_token.split('Bearer ')[-1]
             self.headers['Authorization'] = f'Bearer {self.jwt_token}'
         # self.hrms_headers = self.headers
         return self.headers
 
-
+    @custom_logger.log_around
     def get_headers(self):
         return self.headers
 
+    @custom_logger.log_around
     def login(self):
-        login_url = f'{self.base_url}/api/user/signin'
-        credentials = {
-            "username": self.username,
-            "password": self.password
-        }
-        response = requests.post(login_url, json=credentials, headers=self.form_headers())
+        if not self.jwt_token:
+            clean_flag = False
+            login_url = f'{self.base_url}/api/user/signin'
+            credentials = {
+                "username": self.username,
+                "password": self.password
+            }
+            response = requests.post(login_url, json=credentials, headers=self.form_headers())
+            if response.status_code == 201:
+                self.jwt_token = response.json().get('accessToken')
+                # self.form_headers()
+                self.headers['Authorization'] = f'Bearer {self.jwt_token}'
 
-        if response.status_code == 201:
-            self.jwt_token = response.json().get('accessToken')
-            # self.form_headers()
-            self.headers['Authorization'] = f'Bearer {self.jwt_token}'
-            print("Login Successful. JWT Token obtained.")
+                print("Login Successful. JWT Token obtained.")
+            else:
+                print(f"Login Failed. Status Code: {response.status_code}, Message: {response.text}")
         else:
-            print(f"Login Failed. Status Code: {response.status_code}, Message: {response.text}")
+            print('Skipping login. JWT Token already available.')
+            clean_flag = True
+            self.form_headers()
+        return clean_flag
 
+    @custom_logger.log_around
     def logout(self):
-        logout_url = f'{self.base_url}/api/user/logout'  # Update with the actual logout endpoint
-        response = requests.post(logout_url, headers=self.get_headers())
-
-        if response.status_code == 200:
-            print("Logout Successful.")
+        if self.jwt_token:
+            print("Skipping logout. JWT Token already available.")
         else:
-            print(f"Logout Failed. Status Code: {response.status_code}, Message: {response.text}")
+            logout_url = f'{self.base_url}/api/user/logout'
+            response = requests.post(logout_url, headers=self.get_headers())
 
+            if response.status_code == 200:
+                print("Logout Successful.")
+            else:
+                print(f"Logout Failed. Status Code: {response.status_code}, Message: {response.text}")
+
+    @custom_logger.log_around
     def hrms_api_call(self, headers, method, url, data=None):
         try:
-
             print(type(data))
             json_data = json.dumps(data)
             response = requests.request(headers=headers, method=method, data=json_data, url=url)
             response.raise_for_status()
-            print(response.json())
             if response:
                 print(f"API Call to {url} | Method: {method} | Status Code: {response.status_code}")
                 return response.json() if 'application/json' in response.headers.get('Content-Type',
@@ -75,3 +92,10 @@ class HRMSApiService:
             print("Timeout Error:", errt)
         except requests.exceptions.RequestException as err:
             print("Oops: Something Else", err)
+
+
+"""jwt_token = '''Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYXVteWFAZHJkby5jb20iLCJpYXQiOjE3MDk3MDMwMTcsImV4cCI6MTcwOTc0NjIxN30.hDMN1BkXL9MTNu8hRc-b3gBnaQD9uaT3LAq-eO7oM8RjFInJwmKlrZgGyE3ieiRyhc8WHifWpfCbbyK1MRC4bA'''
+
+x = HRMSApiService('http://192.168.1.102:8082', 'redberyltech.com', 'redberyltech', jwt_token,
+                   X_TenantID='redberyltech').login()
+print(x)"""

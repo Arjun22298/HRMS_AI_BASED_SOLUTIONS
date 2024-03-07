@@ -21,3 +21,8 @@ INSERT_QUALIFICATION_API_END_POINT = 'candidate/api/qualification'
 INSERT_CANDIDATE_DETAILS_API_END_POINT = 'candidate/api/candidate-details'
 
 INSERT_CANDIDATE_RAW_DATA_INTO_DATABASE = 'candidate/api/candidateDetailsRaw/save'
+
+INSERT_JD_PARSED_DETAILS_INTO_DATABASE = '/candidate/api/jd'
+
+SEARCH_SKILLS_BY_NAME_API_END_POINT = 'candidate/api/skillName'
+INSERT_SKILLS_API_END_POINT = 'candidate/api/skills'

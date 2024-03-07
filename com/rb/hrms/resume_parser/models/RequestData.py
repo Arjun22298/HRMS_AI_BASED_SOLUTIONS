@@ -10,3 +10,8 @@ class RequestData(BaseModel):
     download_resume_folder: str
     email_specific_date_flag: str
     email_specific_date: str
+
+
+class SingleResumeParsing(BaseModel):
+    Authorization: str
+    X_TenantID: str

@@ -7,7 +7,7 @@ from com.rb.hrms.resume_parser.constants.HRMSApiConstants import *
 
 
 class CilentResumeData:
-    def insert_into_database(self, list_of_json_data,hrms_api_service):
+    def insert_into_database(self, list_of_json_data, hrms_api_service):
         try:
             # insert_into_database = CandidateDataRawDetails()
 
@@ -24,31 +24,25 @@ class CilentResumeData:
             current_time = datetime.now()
             date = dataframe['processDate'] = current_time.strftime('%Y-%m-%dT%H:%M:%S')
             logging.info(date)
-            print("This is dataframe: ", dataframe)
             json_data = dataframe.to_json(orient='records')
             json_data = json.loads(json_data)
             formatted_json = json.dumps(json_data[0], indent=4)
-            print("This is the actual format: ", formatted_json)
-            self.insert_raw_data_into_database(hrms_api_service=hrms_api_service,data=formatted_json)
+            self.insert_raw_data_into_database(hrms_api_service=hrms_api_service, data=formatted_json)
             # logging.info("Data inserted into the database.")
         except Exception as e:
             logging.error(f"Error inserting data into the database: {e}")
 
-    def insert_raw_data_into_database(self,hrms_api_service, data):
+    def insert_raw_data_into_database(self, hrms_api_service, data):
         try:
             url = f"{hrms_api_service.base_url}/{INSERT_CANDIDATE_RAW_DATA_INTO_DATABASE}"
-            print(f"URL :: {url}")
             response = self.hrms_api_call_to_insert_raw_data(headers=hrms_api_service.headers, method='POST',
                                                              url=url,
                                                              data=data)
         except Exception as e:
             logging.error(str(e), exc_info=True)
 
-
     def hrms_api_call_to_insert_raw_data(self, headers, method, url, data=None):
         try:
-
-            print(type(data))
             response = requests.request(headers=headers, method=method, data=data, url=url)
             response.raise_for_status()
             print(response.json())

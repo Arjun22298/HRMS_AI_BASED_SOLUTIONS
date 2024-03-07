@@ -1,7 +1,5 @@
-import requests
 import json
 import logging
-from com.rb.hrms.resume_parser.constants.Constants import data
 from com.rb.hrms.resume_parser.constants.HRMSApiConstants import *
 from com.rb.hrms.resume_parser.services.HRMSApiService import HRMSApiService
 from com.rb.hrms.resume_parser.constants.HRMSApiConstants import GET_CANDIDATE_RAW_DETAILS_API_END_POINT
@@ -13,14 +11,16 @@ from com.rb.hrms.resume_parser.utils.ConvertNullToNone import ConvertNullToNone
 
 
 class CandidateRawDataProcessor:
-    def __init__(self):
+    def __init__(self, Authorization, X_TenantID):
         self.convert_null_object = ConvertNullToNone()
-
+        self.authorization = Authorization
+        self.x_tenantid = X_TenantID
 
     def process_candidate_raw_details(self):
         try:
             api_caller = HRMSApiService(base_url=API_BASE_URL, username=HRMS_API_USERNAME,
-                                        password=HRMS_API_PASSWORD)
+                                        password=HRMS_API_PASSWORD, jwt_token_id=self.authorization,
+                                        X_TenantID=self.x_tenantid)
             api_caller.login()
 
             response = api_caller.hrms_api_call(headers=api_caller.get_headers(), method='GET',
@@ -104,4 +104,3 @@ class CandidateRawDataProcessor:
 
 """Candidate_Data_Details = CandidateRawDataProcessor().process_candidate_raw_details()
 print(Candidate_Data_Details)"""
-

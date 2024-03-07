@@ -1,5 +1,6 @@
 import json
-from com.rb.hrms.resume_parser.constants.HRMSApiConstants import INSERT_CANDIDATE_DETAILS_API_END_POINT,PUT_CANDIDATE_RAW_DETAILS_API_END_POINT
+from com.rb.hrms.resume_parser.constants.HRMSApiConstants import INSERT_CANDIDATE_DETAILS_API_END_POINT, \
+    PUT_CANDIDATE_RAW_DETAILS_API_END_POINT
 from com.rb.hrms.resume_parser.constants.Constants import *
 import logging
 
@@ -19,7 +20,6 @@ class CandidateDetailsService:
             logging.error(str(e), exc_info=True)
             return None
 
-
     @staticmethod
     def update_into_raw_candidate_tables(hrms_api_service, payload, id):
         try:
@@ -32,4 +32,3 @@ class CandidateDetailsService:
         except Exception as e:
             logging.error(str(e), exc_info=True)
             return None
-

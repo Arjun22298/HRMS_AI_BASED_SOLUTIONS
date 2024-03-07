@@ -6,14 +6,14 @@ from com.rb.hrms.resume_parser.utils.ResumeParsingStatus import ResumeParsingSta
 from tenacity import retry, stop_after_attempt, wait_fixed
 from com.rb.hrms.resume_parser.utils.FileProcessor import FileProcessor
 from com.rb.hrms.resume_parser.constants.ResumeParsingWithAIConstants import PROMPT_TO_GET_INITIAL_DATA, \
-    PROMPT_TO_GET_DATA_IN_JSON_FORMAT
+    PROMPT_TO_GET_DATA_IN_JSON_FORMAT, API_KEY
 from com.rb.hrms.resume_parser.constants.HRMSApiConstants import *
 from com.rb.hrms.resume_parser.services.HRMSApiService import HRMSApiService
 
 
 class ResumeProcessor:
-    def __init__(self):
-        self.GOOGLE_API_KEY = 'AIzaSyCJ1lilxDln2C1Eil-0VSfwSFUAo4F6YHY'
+    def __init__(self, JWT_TOKEN_ID, X_TenantID):
+        self.GOOGLE_API_KEY = API_KEY
         genai.configure(api_key=self.GOOGLE_API_KEY)
 
         for m in genai.list_models():
@@ -23,7 +23,7 @@ class ResumeProcessor:
         self.setup_logger()
 
         self.api_caller = HRMSApiService(base_url=API_BASE_URL, username=HRMS_API_USERNAME,
-                                         password=HRMS_API_PASSWORD)
+                                         password=HRMS_API_PASSWORD, jwt_token_id=JWT_TOKEN_ID, X_TenantID=X_TenantID)
 
     def setup_logger(self):
         logging.basicConfig(level=logging.INFO,

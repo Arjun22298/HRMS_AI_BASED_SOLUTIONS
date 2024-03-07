@@ -4,25 +4,18 @@ SCOPES = ['https://mail.google.com/']
 PROCESSED = "D:/hrms-application-parent/HrAtomation/final_extracted_pdf_path"
 DOWNLOADS = "D:\HrAtomation\ResumeAiBased"
 
-
 Resume = """if resume_matched(If resume_matched, otherwise Null) and given proper"""
 FORMAT = """
 {"resume_matched":"resume_matched",
 "file_name":"file_name"},NextJson"""
 
-
 CITY_PATTERN = r'\b([A-Z][a-zA-Z\s]+)\s*(?=[,|\(|\|])'
 
 QUALIFICATION_PATTERN = r'\b([A-Z][A-Za-z\s\.]+(?:\s[A-Za-z\s\.]+)*)\b'
 
-
 EMAIL_ID_PATTERN = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
-
-
-
-
-data =''' {"fullName": "Arjun Raj",
+data = ''' {"fullName": "Arjun Raj",
   "email": "arjunraj7579@gmail.com",
   "contactNo": "+918340397950",
   "altContactNo": null,
@@ -57,3 +50,5 @@ data =''' {"fullName": "Arjun Raj",
     "isActive": true
   }
 }'''
+
+LOG_FILE_PATH = r'D:\ResumeParserProject\com\rb\hrms\resume_parser\logging'

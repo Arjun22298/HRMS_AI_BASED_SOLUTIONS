@@ -3,10 +3,15 @@ import os
 import logging
 from com.rb.hrms.resume_parser.utils.FileProcessor import FileProcessor
 from com.rb.hrms.resume_parser.utils.JDResponseHandler import JDResponseHandler
+from com.rb.hrms.resume_parser.services.HRMSAIService import AIService
+from com.rb.hrms.resume_parser.constants.JDParsingWithAiConstants import JOB_DESCRIPTION_DETAILS
+from com.rb.hrms.resume_parser.logging.Logging_file import custom_logger
+
+logger = custom_logger
 
 
-class JDProcessor:
-
+class ParseJDWithAIProcessor:
+    @custom_logger.log_around
     def parsed_JD(self, folder_path):
         try:
             list_of_files = glob.glob(f'{folder_path}\\*.*')
@@ -21,12 +26,21 @@ class JDProcessor:
                     continue
                 # TODO - -- > AI WILL PARSED THE JD AND GIVEN ME ACCURATE FORMAT ..
                 try:
-                    Response = self.generate_content_with_retry(f"{data},{job_description_details}")
-                    extract_jb_data = Response.text
+                    self.ai_service = AIService('gemini')
+                    self.ai_service.login()
+                    response = self.ai_service.ai_api_call(f"{data},{JOB_DESCRIPTION_DETAILS}")
                     handling_response_of_jd_parser = JDResponseHandler()
-                    handling_response_of_jd_parser._handling_jd_ai_response(extract_jb_data, file)
+                    response = handling_response_of_jd_parser._handling_jd_ai_response(response, file)
+                    # TODO ---> RETURN THE  OF DATA
+                    if response:
+                        return response
                 except Exception as e:
                     logging.warning(f'Exception comes from Parsed based on JD {str(e)}')
-
+                finally:
+                    self.ai_service.logout()
         except Exception as e:
             print("Exception error comes", str(e))
+
+
+x = ParseJDWithAIProcessor().parsed_JD('D:\JobDescriptionFile')
+print(x)

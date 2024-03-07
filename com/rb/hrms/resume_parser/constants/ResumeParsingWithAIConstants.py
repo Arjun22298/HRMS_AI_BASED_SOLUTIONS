@@ -1,4 +1,4 @@
-API_KEY = 'AIzaSyCJ1lilxDln2C1Eil-0VSfwSFUAo4F6YHY'
+API_KEY = 'AIzaSyBjIat3csnA4y8Jki8IV7EvPpil23fbxdg'
 
 PROMPT_TO_GET_INITIAL_DATA = '''I want to extract the Resume or cv  following information from the dataset: candidateName 
 dateOfBirth (If available , otherwise Null) gender (If available, otherwise Null) address (If available, 

@@ -26,7 +26,7 @@ class GmailService(EmailService):
         try:
             self.service = self.connect(request_data)
         except Exception as e:
-            print("Excepting in Connection....")
+            print("Excepting in Connection....",str(e))
         try:
             search_query = QueryBuilder().build_query(request_data)
             print("This is the query sytring",search_query)
