@@ -1,10 +1,12 @@
 from com.rb.hrms.resume_parser.logging.RollingFileLogger import RollingFileLogger
 import logging
 
+
 class BaseHRMS:
 
     def __init__(self):
         self.logger = RollingFileLogger("../../../../../logs/ResumeParser.log")
+
 
 # Example usage:
 if __name__ == "__main__":

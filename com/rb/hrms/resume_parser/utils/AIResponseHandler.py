@@ -11,7 +11,7 @@ class AIResponseHandler:
         self.number_of_cv_failed = 0
         self.number_of_cv_processed = 0
 
-    def handle_response(self, response, file,hrms_api_service):
+    def handle_response(self, response, file, hrms_api_service):
         file_name = os.path.basename(file)
         self.response = response
         logging.info(self.response)
@@ -33,5 +33,5 @@ class AIResponseHandler:
         if 'higherQualification' in data and data['higherQualification'] is not None:
             data['higherQualification'] = data['higherQualification'].upper()
 
-        CilentResumeData().insert_into_database(data,hrms_api_service=hrms_api_service)
+        CilentResumeData().insert_into_database(data, hrms_api_service=hrms_api_service)
         self.list_of_json_data.append(data)

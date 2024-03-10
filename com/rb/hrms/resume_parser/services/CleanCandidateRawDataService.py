@@ -57,8 +57,7 @@ class CleanCandidateRawDataService:
                     clean_flag = False
 
             else:
-                print('cleanedCityId is already available and no need to reprocess is None')
-                pass
+                clean_flag = None
 
             # Clean
             if candidate_data.get('cleanedQualificationId') is None:
@@ -79,7 +78,7 @@ class CleanCandidateRawDataService:
                 else:
                     clean_flag = False
             else:
-                print('cleaned Qualification Id is already available and no need to reprocess is None')
+                clean_flag = None
             if candidate_data.get('cleanedContactNo') is None:
                 # TODO --> PHONE NUMBER SERVICE
                 candidate_phone_number = candidate_data.get('phoneNumber')
@@ -94,7 +93,7 @@ class CleanCandidateRawDataService:
                 else:
                     clean_flag = False
             else:
-                print('cleaned Mobile number is already clean and no need to reprocess is None')
+                clean_flag = None
 
             # TODO --> CLEANING THE CANDIDATE EMAIL ID
             candidate_email_id = candidate_data.get('email')
@@ -107,11 +106,9 @@ class CleanCandidateRawDataService:
                     # TODO --> PHONE NUMBER SERVICE
                 candidate_data['email'] = clean_email_id
             else:
-                print('cleaned email id is already clean and no need to reprocess is None')
-            return candidate_data,clean_flag
+                clean_flag = None
+            return candidate_data, clean_flag
 
             # TODO  UPDATE CANDIDATE RAW DATA AND ALSO UPDATE THE DATA INTO CANDIDATE DETAILS
         except:
             hrms_api_service.logout()
-
-

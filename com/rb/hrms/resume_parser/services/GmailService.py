@@ -1,12 +1,9 @@
 import time
-# from Email_process.constants import API_NAME, API_VERSION, SCOPES
 import os
 import pickle
 from datetime import datetime
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-import base64
-from email import message_from_string
 from googleapiclient.discovery import build
 from com.rb.hrms.resume_parser.services.EmailService import EmailService
 from com.rb.hrms.resume_parser.logging.RollingFileLogger import RollingFileLogger
@@ -14,7 +11,6 @@ import logging
 from com.rb.hrms.resume_parser.constants.Constants import *
 from com.rb.hrms.resume_parser.utils.EmailContentExtractor import EmailContentExtractor
 from com.rb.hrms.resume_parser.utils.QueryBuilder import QueryBuilder
-from typing import List
 
 
 class GmailService(EmailService):
@@ -26,27 +22,27 @@ class GmailService(EmailService):
         try:
             self.service = self.connect(request_data)
         except Exception as e:
-            print("Excepting in Connection....",str(e))
+            print("Excepting in Connection....", str(e))
         try:
             search_query = QueryBuilder().build_query(request_data)
-            print("This is the query sytring",search_query)
+            print("This is the query string", search_query)
         except Exception as e:
-            print("Exception in Query Builder...")
+            print("Exception in Query Builder...", str(e))
         try:
             filtered_email_messages = self.get_emails(search_query)
         except Exception as e:
-            print("Exception in Extracting Emails...")
+            print("Exception in Extracting Emails...", str(e))
         try:
             self.download_attachment(request_data.download_resume_folder, filtered_email_messages)
         except Exception as e:
-            print("Exception in Downloading Attachments...")
+            print("Exception in Downloading Attachments...", str(e))
 
     def connect(self, request_data):
         if request_data is None:
             # TODO - Throw connection exception
             return
         else:
-            self.client_secret_file = request_data.email_pickle_path
+            self.client_secret_file = request_data.email_token_path
             logging.info(f"This is the CLIENT FILE CREDENTIALS:- {self.client_secret_file}")
             self.pickle_path = request_data.email_pickle_path
             logging.info(f"This is the pickle File Credentials: {self.pickle_path}")
@@ -73,6 +69,7 @@ class GmailService(EmailService):
             os.mkdir(os.path.join(working_dir, token_dir))
 
         if os.path.exists(os.path.join(working_dir, token_dir, pickle_file)):
+            # creds = Credentials.from_authorized_user_file(os.path.join(working_dir, token_dir, pickle_file), SCOPES)
             with open(os.path.join(working_dir, token_dir, pickle_file), 'rb') as token:
                 cred = pickle.load(token)
 
@@ -88,11 +85,9 @@ class GmailService(EmailService):
 
         try:
             service = build(API_SERVICE_NAME, API_VERSION, credentials=cred)
-            print(API_SERVICE_NAME, API_VERSION, 'service created successfully')
             return service
         except Exception as e:
             print(e)
-            print(f'Failed to create service instance for {API_SERVICE_NAME}')
             os.remove(os.path.join(working_dir, token_dir, pickle_file))
             return None
 
@@ -115,7 +110,7 @@ class GmailService(EmailService):
         try:
             message_list_response = self.service.users().messages().list(
                 userId='me',
-                #labelIds=label_ids,
+                # labelIds=label_ids,
                 q=query_string,
                 pageToken=pageToken
             ).execute()
@@ -141,7 +136,6 @@ class GmailService(EmailService):
                     if 'parts' in message_detail_payload:
                         for msgPayload in message_detail_payload['parts']:
                             file_name = msgPayload['filename']
-                            print("This is the file name ", file_name)
                             body = msgPayload['body']
                             if 'attachmentId' in body:
                                 attachment_id = body['attachmentId']

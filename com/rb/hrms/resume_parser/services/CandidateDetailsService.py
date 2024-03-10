@@ -1,7 +1,5 @@
-import json
 from com.rb.hrms.resume_parser.constants.HRMSApiConstants import INSERT_CANDIDATE_DETAILS_API_END_POINT, \
     PUT_CANDIDATE_RAW_DETAILS_API_END_POINT
-from com.rb.hrms.resume_parser.constants.Constants import *
 import logging
 
 

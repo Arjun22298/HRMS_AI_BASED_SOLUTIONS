@@ -1,15 +1,11 @@
 import json
-
 import requests
-from com.rb.hrms.resume_parser.constants.HRMSApiConstants import *
-from com.rb.hrms.resume_parser.utils.ConvertNullToNone import ConvertNullToNone
 from com.rb.hrms.resume_parser.logging.Logging_file import custom_logger
-
 logger = custom_logger
 
 
 class HRMSApiService:
-    def __init__(self, base_url, username, password, jwt_token_id=None, X_TenantID=str('redberyltech')):
+    def __init__(self, base_url, username, password, jwt_token_id=None, X_TenantID=None):
         self.base_url = base_url
         self.username = username
         self.password = password
@@ -45,9 +41,9 @@ class HRMSApiService:
             }
             response = requests.post(login_url, json=credentials, headers=self.form_headers())
             if response.status_code == 201:
-                self.jwt_token = response.json().get('accessToken')
+                jwt_token = response.json().get('accessToken')
                 # self.form_headers()
-                self.headers['Authorization'] = f'Bearer {self.jwt_token}'
+                self.headers['Authorization'] = f'Bearer {jwt_token}'
 
                 print("Login Successful. JWT Token obtained.")
             else:
@@ -60,9 +56,10 @@ class HRMSApiService:
 
     @custom_logger.log_around
     def logout(self):
-        if self.jwt_token:
+        if self.jwt_token is not None:
             print("Skipping logout. JWT Token already available.")
         else:
+
             logout_url = f'{self.base_url}/api/user/logout'
             response = requests.post(logout_url, headers=self.get_headers())
 
@@ -94,8 +91,11 @@ class HRMSApiService:
             print("Oops: Something Else", err)
 
 
-"""jwt_token = '''Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYXVteWFAZHJkby5jb20iLCJpYXQiOjE3MDk3MDMwMTcsImV4cCI6MTcwOTc0NjIxN30.hDMN1BkXL9MTNu8hRc-b3gBnaQD9uaT3LAq-eO7oM8RjFInJwmKlrZgGyE3ieiRyhc8WHifWpfCbbyK1MRC4bA'''
 
-x = HRMSApiService('http://192.168.1.102:8082', 'redberyltech.com', 'redberyltech', jwt_token,
-                   X_TenantID='redberyltech').login()
-print(x)"""
+"""x = HRMSApiService('http://192.168.1.102:8082', 'redberyltech1234', 'redberyltech@1234', None,
+                   X_TenantID='redberyltech')
+x.login()
+
+
+x.logout()
+"""

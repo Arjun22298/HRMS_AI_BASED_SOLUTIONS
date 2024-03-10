@@ -26,3 +26,7 @@ INSERT_JD_PARSED_DETAILS_INTO_DATABASE = '/candidate/api/jd'
 
 SEARCH_SKILLS_BY_NAME_API_END_POINT = 'candidate/api/skillName'
 INSERT_SKILLS_API_END_POINT = 'candidate/api/skills'
+
+INSERT_JOB_DESCRIPTION_DETAILS_API_END_POINT = 'candidate/api/jd'
+
+INSERT_JOB_DESCRIPTION_RAW_DETAILS_API_END_POINT = 'candidate/api/jobDescription/raw/save'
