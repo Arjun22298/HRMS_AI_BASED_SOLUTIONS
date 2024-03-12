@@ -5,8 +5,13 @@ from datetime import datetime
 import requests
 from com.rb.hrms.resume_parser.constants.HRMSApiConstants import *
 
+from com.rb.hrms.resume_parser.logging.Logging_file import custom_logger
+
+logger = custom_logger
+
 
 class CilentResumeData:
+    @custom_logger.log_around
     def insert_into_database(self, list_of_json_data, hrms_api_service):
         try:
             # insert_into_database = CandidateDataRawDetails()
@@ -32,6 +37,7 @@ class CilentResumeData:
         except Exception as e:
             logging.error(f"Error inserting data into the database: {e}")
 
+    @custom_logger.log_around
     def insert_raw_data_into_database(self, hrms_api_service, data):
         try:
             url = f"{hrms_api_service.base_url}/{INSERT_CANDIDATE_RAW_DATA_INTO_DATABASE}"
@@ -41,6 +47,7 @@ class CilentResumeData:
         except Exception as e:
             logging.error(str(e), exc_info=True)
 
+    @custom_logger.log_around
     def hrms_api_call_to_insert_raw_data(self, headers, method, url, data=None):
         try:
             response = requests.request(headers=headers, method=method, data=data, url=url)

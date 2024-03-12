@@ -6,7 +6,7 @@ import logging
 class QueryBuilder():
 
     def __init__(self):
-        self.logger = RollingFileLogger("../../../../../logs/ResumeParser.log")
+        self.logger = RollingFileLogger("D:/ResumeParserProject/logs/ResumeParser.log")
 
     def parse_label_with_prefix(self,input_string):
         self.logger.log("Entry in method QueryBuilder().parse_label_with_prefix()", level=logging.INFO)

@@ -11,15 +11,12 @@ router = APIRouter()
 
 @router.post("/resume_parser_callable")
 def process_request(data: RequestData):
-    try:
         # x_api_key: str = Header(..., convert_underscores=False)
         processor = APIProcessor(None)
         print("This is the data ", data)
         processor.process_request(data)
         api_response = HRMSApiException().valid_resume_data_parsing_response(valid_json_response_of_email_resume)
         return api_response
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 

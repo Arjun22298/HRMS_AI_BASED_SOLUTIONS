@@ -20,10 +20,10 @@ class JDResponseHandler:
     @custom_logger.log_around
     def _handling_jd_ai_response(self, response, file):
         try:
-            hrms_api_service = HRMSApiService(base_url=API_BASE_URL, username=HRMS_API_USERNAME,
-                                              password=HRMS_API_PASSWORD, jwt_token_id=self.authorization,
-                                              X_TenantID=self.x_tenantid)
-            hrms_api_service.login()
+            self.hrms_api_service = HRMSApiService(base_url=API_BASE_URL, username=HRMS_API_USERNAME,
+                                                   password=HRMS_API_PASSWORD, jwt_token_id=self.authorization,
+                                                   X_TenantID=self.x_tenantid)
+            self.hrms_api_service.login()
             self.insert_jd_data_into_database = ParsedJDAIService()
             file_name = os.path.basename(file)
             self.response = response
@@ -48,11 +48,11 @@ class JDResponseHandler:
                 # TODO HERE WE CALL THE REMAINING SERVICE TO CALL THAT AND EXTRACT THE INFORMATION FOR THE DESCRIPTION
                 if parse_jd_details:
                     response, clean_flag = self.insert_jd_data_into_database.generate_JD_response_based_on_HRMS_API(
-                        hrms_api_service=hrms_api_service, JD_parse_data=parse_jd_details)
+                        hrms_api_service=self.hrms_api_service, JD_parse_data=parse_jd_details)
 
                     return response, clean_flag
 
         except Exception as e:
             logging.error(f"Exception occurred handling AI response for job description: {str(e)}")
         finally:
-            hrms_api_service.logout()
+            self.hrms_api_service.logout()

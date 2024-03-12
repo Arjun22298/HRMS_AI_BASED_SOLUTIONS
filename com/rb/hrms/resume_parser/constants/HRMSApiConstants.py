@@ -20,6 +20,7 @@ INSERT_QUALIFICATION_API_END_POINT = 'candidate/api/qualification'
 
 INSERT_CANDIDATE_DETAILS_API_END_POINT = 'candidate/api/candidate-details'
 
+
 INSERT_CANDIDATE_RAW_DATA_INTO_DATABASE = 'candidate/api/candidateDetailsRaw/save'
 
 INSERT_JD_PARSED_DETAILS_INTO_DATABASE = '/candidate/api/jd'
@@ -30,3 +31,5 @@ INSERT_SKILLS_API_END_POINT = 'candidate/api/skills'
 INSERT_JOB_DESCRIPTION_DETAILS_API_END_POINT = 'candidate/api/jd'
 
 INSERT_JOB_DESCRIPTION_RAW_DETAILS_API_END_POINT = 'candidate/api/jobDescription/raw/save'
+
+GET_JOB_DESCRIPTION_DETAILS_API_END_POINT = 'candidate/api/jd/getall'

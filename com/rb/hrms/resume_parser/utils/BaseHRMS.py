@@ -5,7 +5,7 @@ import logging
 class BaseHRMS:
 
     def __init__(self):
-        self.logger = RollingFileLogger("../../../../../logs/ResumeParser.log")
+        self.logger = RollingFileLogger("D:/ResumeParserProject/logs/ResumeParser.log")
 
 
 # Example usage:

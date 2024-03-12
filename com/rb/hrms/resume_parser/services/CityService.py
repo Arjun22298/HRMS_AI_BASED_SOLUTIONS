@@ -6,19 +6,30 @@ import logging
 from com.rb.hrms.resume_parser.services.HRMSAIService import AIService
 from com.rb.hrms.resume_parser.logging.Logging_file import custom_logger
 
-
 logger = custom_logger
+
+
 class CityService:
+    def __init__(self):
+        self.ai_service = AIService('gemini')
+
     @custom_logger.log_around
     def cleanData(self, hrms_api_service, city_name):
         try:
-            self.ai_service = AIService('gemini')
-            self.ai_service.login()
-            # TODO - Call AI Service
-            response = self.ai_service.ai_api_call(
-                f"{CITY_DETAILS_PROMPT_PART1} {city_name} {CITY_DETAILS_PROMPT_PART2} {CITY_DETAILS_RESPONSE_FORMAT}")
-            print(f"AI RESPONSE :: {response}")
+            response = self.search_city_in_master(hrms_api_service, city_name)  # search
+            print(f"Response :: {response}")
             if response is None:
+                self.ai_service.login()
+                # TODO - Call AI Service
+                AI_response = self.ai_service.ai_api_call(
+                    f"{CITY_DETAILS_PROMPT_PART1} {city_name} {CITY_DETAILS_PROMPT_PART2} {CITY_DETAILS_RESPONSE_FORMAT}")
+                print(f"AI RESPONSE :: {response}")
+                if AI_response:
+                    city_name = self.get_clean_city_name(AI_response)
+                    response = self.insert_city_in_master(hrms_api_service, city_name)
+                else:
+                    return None
+            """if response is None:
                 pass
                 # TODO - Insert data into city Master
             else:
@@ -26,7 +37,7 @@ class CityService:
                 response = self.search_city_in_master(hrms_api_service, city_name)  # search
                 print(f"Response :: {response}")
                 if response is None:
-                    response = self.insert_city_in_master(hrms_api_service, city_name)
+                    response = self.insert_city_in_master(hrms_api_service, city_name)"""
             return response
         except Exception as e:
             logging.error(str(e))

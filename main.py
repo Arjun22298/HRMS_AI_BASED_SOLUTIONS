@@ -19,13 +19,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# Include the router in the main FastAPI app
 app.include_router(resume_attachments_download_router.router)
 app.include_router(cleanResumeDataRouter.router)
 app.include_router(parseJDRouter.router)
 app.include_router(parseSingleResumeRouter.router)
 app.include_router(ResumeParsingProcessorRouter.router)
 
-# Run the FastAPI app
 if __name__ == "__main__":
     run(app, host=str("192.168.1.106"), port=int(7000))

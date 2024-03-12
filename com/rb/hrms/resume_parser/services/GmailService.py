@@ -14,26 +14,22 @@ from com.rb.hrms.resume_parser.utils.QueryBuilder import QueryBuilder
 
 
 class GmailService(EmailService):
-
-    def __init__(self):
-        self.logger = RollingFileLogger("../../../../../logs/ResumeParser.log")
-
     def process(self, request_data):
         try:
             self.service = self.connect(request_data)
         except Exception as e:
             print("Excepting in Connection....", str(e))
         try:
-            search_query = QueryBuilder().build_query(request_data)
-            print("This is the query string", search_query)
+            self.search_query = QueryBuilder().build_query(request_data)
+            print("This is the query string", self.search_query)
         except Exception as e:
             print("Exception in Query Builder...", str(e))
         try:
-            filtered_email_messages = self.get_emails(search_query)
+            self.filtered_email_messages = self.get_emails(self.search_query)
         except Exception as e:
             print("Exception in Extracting Emails...", str(e))
         try:
-            self.download_attachment(request_data.download_resume_folder, filtered_email_messages)
+            self.download_attachment(request_data.download_resume_folder, self.filtered_email_messages)
         except Exception as e:
             print("Exception in Downloading Attachments...", str(e))
 

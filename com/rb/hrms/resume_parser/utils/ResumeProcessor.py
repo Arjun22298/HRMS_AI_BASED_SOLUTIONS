@@ -57,7 +57,6 @@ class ResumeProcessor:
 
         except Exception as e:
             logging.warning(f"exception comes from processed_resumes{str(e)}")
-
         finally:
             self.api_caller.logout()
 
@@ -79,4 +78,5 @@ class ResumeProcessor:
             return candidate_response_data_2
 
 
-"""x = ResumeProcessor().process('D:\RESUME_DOWNLOAD_PATH')"""
+"""x = ResumeProcessor(JWT_TOKEN_ID=None, X_TenantID='redberyltech').process('D:\RESUME_DOWNLOAD_PATH')
+"""
