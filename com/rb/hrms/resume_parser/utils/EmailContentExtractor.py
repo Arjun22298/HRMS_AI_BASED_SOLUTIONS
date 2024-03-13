@@ -3,7 +3,7 @@ import logging
 from typing import List
 
 
-class EmailContentExtractor():
+class EmailContentExtractor:
     def get_file_detail(self, message_id, attachment_id, file_name, save_location, service):
         try:
             response = service.users().messages().attachments().get(

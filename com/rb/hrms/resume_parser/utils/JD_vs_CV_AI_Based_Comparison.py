@@ -15,11 +15,11 @@ class JDvsCVAIBasedCompare:
                                                    f" {COMPARE_JD} {candidate_raw_json_data} {RESULT_JD}"
                                                    f" {JOB_DESCRIPTION_DETAILS} and {EXPERIENECE_DATA} "
                                                    f"{JSON_FORMAT}")
-            response = response.replace('\n', "")
-            processed_date = datetime.now().date()
-            print("This is the response of jd details", response, processed_date)
+            candidate_raw_data_parsing_jd_vs_cv = response.replace('\n', "")
+            processed_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+            print("This is the response of jd details", candidate_raw_data_parsing_jd_vs_cv, processed_date)
 
-            return response, processed_date
+            return candidate_raw_data_parsing_jd_vs_cv, processed_date
             # response_of_jd, clean_flag = handling_response_of_jd_parser._handling_jd_ai_response(response, file)
 
 

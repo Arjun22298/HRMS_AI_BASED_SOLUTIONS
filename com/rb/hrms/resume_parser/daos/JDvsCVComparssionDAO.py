@@ -36,11 +36,12 @@ class JDvsCVComparisonDAO:
         except Exception as e:
             print("An error occurred while getting candidate raw data tables:", str(e))
 
-    """def insert_raw_data_of_JDvsCV_Comparison(self, hrms_api_service):
+    def insert_raw_data_of_JDvsCV_Comparison(self, hrms_api_service, payload):
         try:
-            url = f"{hrms_api_service.base_url}/{}"
-            response = hrms_api_service.hrms_api_call(headers=hrms_api_service.headers, method='GET',
-                                                      url=url)
+            url = f"{hrms_api_service.base_url}/{INSERT_JD_VS_CV_COMPARSION_RAW_DATA_API_END_POINT}"
+            response = hrms_api_service.hrms_api_call(headers=hrms_api_service.headers, method='POST',
+                                                      url=url, data=payload)
+            return response
 
         except Exception as e:
-            print("Exception error comes in Insert raw data of jdvscv comparison", str(e))"""
+            print("Exception error comes in Insert raw data of jdvscv comparison", str(e))

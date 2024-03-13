@@ -11,3 +11,5 @@ google
 pandas
 psycopg2
 wrapt
+pdfminer.six
+google-generativeai

@@ -33,3 +33,5 @@ INSERT_JOB_DESCRIPTION_DETAILS_API_END_POINT = 'candidate/api/jd'
 INSERT_JOB_DESCRIPTION_RAW_DETAILS_API_END_POINT = 'candidate/api/jobDescription/raw/save'
 
 GET_JOB_DESCRIPTION_DETAILS_API_END_POINT = 'candidate/api/jd/getall'
+
+INSERT_JD_VS_CV_COMPARSION_RAW_DATA_API_END_POINT = 'candidate/api/JdVsCv/save'

@@ -49,13 +49,25 @@ class JDvsCVMatchingService:
                     if json_data_candidate['candidateDetails_id']:
                         candidate_details_id = json_data_candidate['candidateDetails_id']
                         # TODO JOB DESCRIPTION ID
-                        job_description_id
                         candidate_raw_data = json_data_candidate['jsonData']
-                        response = JDvsCVAIBasedCompare().parsed_ai_jd_vs_cv_data(jd_json_data=job_description_json_data,
+                        candidate_raw_data_parsing_jd_vs_cv,processed_date = JDvsCVAIBasedCompare().parsed_ai_jd_vs_cv_data(jd_json_data=job_description_json_data,
                                                                                   candidate_raw_json_data=candidate_raw_data)
-                        if response:
-                            pass
+                        if candidate_raw_data_parsing_jd_vs_cv:
+                            # TODO Clean_flag = True
+                            clean_flag = True
+                            payload = {'positionId':job_description_id,
+                                       'candidateId':candidate_details_id,
+                                       'comparedOn':processed_date,
+                                       'comparisonDetailsJdVsCv':candidate_raw_data_parsing_jd_vs_cv}
                             # TODO --- STEP 3. AFTER MATCHING THE JSON DATA STORED IN RAW DATA INTO JDvsCV TABLES....
+                            response = self.hrms_api_service.insert_raw_data_of_JDvsCV_Comparison(hrms_api_service=self.headers,
+                                                                                       payload=payload)
+                            if response:
+                                print("Data successfully Insert into Database")
+                            else:
+                                print("Data not insert into the Database")
+                        else:
+                            clean_flag = False
                     else:
                         continue
         except Exception as e:

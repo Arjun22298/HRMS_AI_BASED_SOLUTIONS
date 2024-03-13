@@ -27,21 +27,41 @@ class CandidateRawDataProcessor:
             # TODO ---> MULTIPLE RECORD FROM RAW DATA
             if response is not None:
                 for candidate_data in response:
-                    if candidate_data['candidateDetails_id'] is None:
+                    if candidate_data['cleanStatus'] is None:
                         service_response = self.convert_null_object.convert_null_to_none(candidate_data)
                         service_response, cleanflag = CleanCandidateRawDataService().cleanCandidateRawData(
                             hrms_api_service=api_caller,
                             response=service_response)
                         print("This is the clean flag response! ", cleanflag)
-                        #service_response = self.convert_null_object.convert_null_to_none(service_response)
+                        # service_response = self.convert_null_object.convert_null_to_none(service_response)
 
                         clean_city_id = service_response.get('cleanedCityId')
                         clean_qualification_id = service_response.get('cleanedQualificationId')
 
                         if service_response:
+                            # id 200
+                            # COMPUTER SCIENCE ENGINEERING name
+                            # COMPUTER SCIENCE ENGINEERING
                             # TODO INSERT CANDIDATE DETAILS AND UPDATE CANDIDATE RAW DETAILS
-                            if (not isinstance(clean_city_id, int) and 'id' in clean_city_id) and (
+                            if clean_city_id is None or clean_qualification_id is None:
+                                if service_response['cleanStatus'] is not None:
+                                    continue
+                                else:
+                                    if clean_city_id:
+                                        clean_city_id.get('id')
+                                    service_response['cleanedCityId'] = clean_city_id
+                                    if clean_qualification_id:
+                                        clean_qualification_id.get('id')
+                                    service_response['cleanedQualificationId'] = clean_qualification_id
+                                    service_response['cleanStatus'] = False
+                                    raw_details_response = CandidateDetailsService().update_into_raw_candidate_tables(
+                                        hrms_api_service=api_caller,
+                                        payload=service_response,
+                                        id=service_response.get('id'))
+
+                            elif (not isinstance(clean_city_id, int) and 'id' in clean_city_id) and (
                                     not isinstance(clean_qualification_id, int) and 'id' in clean_qualification_id):
+
                                 candidate_details = CandidateMapper().map(CandidateRawDetails(**service_response))
                                 # TODO ---> HERE WE CONVERT 'NULL' STRING TO NONE FORMAT . . .
                                 response_of_candidate = CandidateDetailsService().insert_into_candidate_details(
@@ -81,12 +101,6 @@ class CandidateRawDataProcessor:
                                             hrms_api_service=api_caller,
                                             payload=service_response,
                                             id=service_response.get('id'))
-
-                                # print("This is the raw details response ", raw_details_response)
-                                if raw_details_response is None:
-                                    print(f"Update Candidate Raw Details Failed...")
-                                else:
-                                    print(f"Update Candidate Raw Details Successful...")
                             else:
                                 # TODO UPDATE THE CANDIDATE RAW DETAILS
                                 # TODO - set clean_status = flag received as parameter - true
@@ -106,16 +120,20 @@ class CandidateRawDataProcessor:
                                         id=service_response.get('id'))
                             if raw_details_response is None:
                                 print("Update Candidate Raw Details Failed....")
+                                return None
                             else:
-                                response = {"candidate_raw_id": raw_details_response['id'],
-                                            "candidate_raw_clean_status": raw_details_response['cleanStatus'],
-                                            "candidateDetails_id": raw_details_response['candidateDetails_id']
-                                            }
+                                candidate_response = response[-1]
+
+                                result_response = {"candidate_raw_id": candidate_response['id'],
+                                                   "candidate_raw_clean_status": candidate_response['cleanStatus'],
+                                                   "candidateDetails_id": candidate_response['candidateDetails_id']
+                                                   }
+
                         else:
                             return None
                     else:
                         continue
-                return response
+            return result_response
         except Exception as e:
             logging.error(str(e), exc_info=True)
             return None
@@ -123,6 +141,6 @@ class CandidateRawDataProcessor:
             api_caller.logout()
 
 
-"""Candidate_Data_Details = (CandidateRawDataProcessor(Authorization=None, X_TenantID='redberyltech')
+Candidate_Data_Details = (CandidateRawDataProcessor(Authorization=None, X_TenantID='redberyltech')
                           .process_candidate_raw_details())
-print(Candidate_Data_Details)"""
+print("This is the data", Candidate_Data_Details)

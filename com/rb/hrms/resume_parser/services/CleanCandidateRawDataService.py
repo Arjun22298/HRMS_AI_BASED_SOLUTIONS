@@ -7,15 +7,10 @@ from com.rb.hrms.resume_parser.services.QualificationService import Qualificatio
 from com.rb.hrms.resume_parser.services.CandidateDataEmailIDService import CandidateDataEmailIDService
 from com.rb.hrms.resume_parser.utils.HandlingCandidatePassingYear import HandlingCandidatePassingYear
 from com.rb.hrms.resume_parser.utils.HandlingCandidateDateOfBirth import HandlingCandidateDateOfBirth
+from com.rb.hrms.resume_parser.utils.FilterCityName import FilterCityName
+
 
 class CleanCandidateRawDataService:
-    def extract_city_names(self, city_name):
-        matches = re.findall(CITY_PATTERN, city_name)
-        if matches:
-            result = ', '.join(matches)
-            return result
-        else:
-            return city_name
 
     def filter_qualification_name(self, qualification_name):
         match = re.search(QUALIFICATION_PATTERN, qualification_name)
@@ -64,8 +59,7 @@ class CleanCandidateRawDataService:
                 candidate_city_name = candidate_data.get('city')
                 if candidate_city_name is not None and isinstance(candidate_city_name, str):
                     clean_flag = True
-                    candidate_city_upper = candidate_city_name.upper()
-                    city_name = self.extract_city_names(candidate_city_upper)
+                    city_name = FilterCityName().clean_city_name(candidate_city_name)
                     cityService = CityService()
                     response = cityService.cleanData(hrms_api_service, city_name)
                     if response is None:
